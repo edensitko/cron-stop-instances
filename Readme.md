@@ -25,10 +25,62 @@ Automatically stop all running AWS EC2 instances across **all regions** every da
 
 ### 1. 📁 Move scripts to a safe folder (macOS users!)
 
-macOS restricts execution from `Desktop`/`Downloads`, so recommended:
+macOS restricts execution from `Desktop`/`Downloads`, so we recommend:
 
 ```bash
 mkdir -p ~/scripts
 mv stop_all_ec2.sh install_ec2_shutdown_cron.sh ~/scripts/
 cd ~/scripts
 chmod +x *.sh
+```
+
+---
+
+### 2. 🛠 Install the cron job
+
+```bash
+./install_ec2_shutdown_cron.sh
+```
+
+The default time is **00:00 every day**. To change it, edit the `install_ec2_shutdown_cron.sh` file and modify the cron expression.
+
+---
+
+### 3. 🔍 Verify cron is active
+
+```bash
+crontab -l
+```
+
+You should see something like:
+
+```bash
+00 00 * * * ~/scripts/stop_all_ec2.sh >> /tmp/ec2_shutdown.log 2>&1
+```
+
+---
+
+### 4. 📜 Monitor output logs
+
+To see real-time output from the cron job:
+
+```bash
+tail -f /tmp/ec2_shutdown.log
+```
+
+---
+
+## ⚙️ Requirements
+
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
+- AWS credentials configured (`aws configure`)
+- Bash-compatible terminal (macOS/Linux)
+
+---
+
+## ✅ Notes
+
+- Make sure the machine running the script has access to AWS and proper IAM permissions to stop EC2 instances.
+- You can change the cron schedule by editing the script or running `crontab -e`.
+
+---
